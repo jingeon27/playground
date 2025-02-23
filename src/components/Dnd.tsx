@@ -1,7 +1,8 @@
-import { Active, DndContext, DraggableSyntheticListeners, KeyboardSensor, PointerSensor, useSensor, useSensors } from "@dnd-kit/core";
+import { Active, DndContext, DragOverlay, DraggableSyntheticListeners, DropAnimation, KeyboardSensor, PointerSensor, defaultDropAnimationSideEffects, useSensor, useSensors } from "@dnd-kit/core";
 import {
     SortableContext,
     UseSortableArguments,
+    arrayMove,
     rectSortingStrategy,
     sortableKeyboardCoordinates,
     useSortable
@@ -9,6 +10,7 @@ import {
 import { CSS } from "@dnd-kit/utilities";
 import { Slot } from "@radix-ui/react-slot";
 import React, { CSSProperties, PropsWithChildren, ReactNode, createContext, useContext, useId, useMemo, useState } from "react";
+import { createPortal } from "react-dom";
 
 interface Context {
   attributes: Record<string, any>;
@@ -28,7 +30,7 @@ export const DndDragSlotItem = (props: PropsWithChildren) => {
   return <Slot {...props} ref={ref} {...attributes} {...listeners} />;
 };
 
-interface Props extends UseSortableArguments {
+interface SlotProps extends UseSortableArguments {
   children?: React.ReactNode;
   handle?: boolean;
   asChild?: boolean;
@@ -37,7 +39,7 @@ interface Props extends UseSortableArguments {
 }
 
 
-export const DndDragSlot = (props: Props) => {
+export function  DndDragSlot (props: SlotProps) {
   const { children, notOverlay, handle, asChild, dragoverStyle, ...restProps } = props;
   const { setNodeRef, transition, setActivatorNodeRef, attributes, listeners, isDragging, transform } =
     useSortable(restProps);
@@ -65,6 +67,29 @@ export const DndDragSlot = (props: Props) => {
     </SortableItemContext.Provider>
   );
 };
+
+const dropAnimationConfig: DropAnimation = {
+  sideEffects: defaultDropAnimationSideEffects({
+    styles: {
+      active: {
+        opacity: "0.4",
+      },
+    },
+  }),
+};
+
+export const DndSortableOverlay = ({ children }: PropsWithChildren) => {
+  return createPortal(
+    <DragOverlay
+      dropAnimation={dropAnimationConfig}
+      style={{ WebkitBoxShadow: "0px 2px 12px 0px rgba(0, 0, 0, 0.12)" }}
+    >
+      {children}
+    </DragOverlay>,
+    document.body,
+  );
+};
+
 
 type BaseItem = { id: string | number };
 
@@ -103,10 +128,16 @@ export function DndDraggableList<T extends BaseItem>({
       onDragStart={({ active }) => {
         setActive(active);
       }}
-      onDragEnd={({ active, over }) => {
+          onDragEnd={({ active, over }) => {
+                  if (over && active.id !== over?.id) {
+          const activeIndex = items.findIndex(({ id }) => id === active.id);
+          const overIndex = items.findIndex(({ id }) => id === over.id);
+          setItems(arrayMove(items, activeIndex, overIndex), items[activeIndex], overIndex, activeIndex);
+        }
+        setActive(null);
       }}
       onDragCancel={() => {
-
+      setActive(null);
       }}
     >
       <SortableContext items={items} strategy={rectSortingStrategy}>
@@ -126,7 +157,8 @@ export function DndDraggableList<T extends BaseItem>({
           })}
           {children}
         </div>
-      </SortableContext>
+          </SortableContext>
+                {activeItem && <DndSortableOverlay>{renderItem(activeItem, activeItemIndex)}</DndSortableOverlay>}
     </DndContext>
   );
 };
