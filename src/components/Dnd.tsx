@@ -45,7 +45,7 @@ const SortableItemContext = createContext<Context>({
   ref() {},
 });
 
-export const DndDragSlotItem = (props: PropsWithChildren) => {
+export function DndDragSlotItem (props: PropsWithChildren) {
   const { attributes, listeners, ref } = useContext(SortableItemContext);
   return <Slot {...props} ref={ref} {...attributes} {...listeners} />;
 };
@@ -81,10 +81,10 @@ export function DndDragSlot(props: SlotProps) {
         ref={setNodeRef}
         style={{
           width: "100%",
-          opacity: notOverlay ? undefined : isDragging ? 0.6 : undefined,
+          opacity: !notOverlay && isDragging ? 0.6 : undefined,
           transform: CSS.Translate.toString(transform),
           transition,
-          zIndex: notOverlay ? (isDragging ? 100 : undefined) : undefined,
+          zIndex: notOverlay &&isDragging ? 100 : undefined,
           cursor: handle ? undefined : "grab",
           ...(isDragging && dragoverStyle ? dragoverStyle : {}),
         }}
@@ -144,14 +144,13 @@ export function DndDraggableList<T extends BaseItem>({
   className,
 }: DndDraggableListProps<T>) {
   const [active, setActive] = useState<Active | null>(null);
-  const activeItem = useMemo(
-    () => items?.find((item) => item.id === active?.id),
-    [active, items],
-  );
+
   const activeItemIndex = useMemo(
     () => items?.findIndex(({ id }) => id === active?.id),
     [active, items],
   );
+
+  const activeItem = useMemo(()=>items?.[activeItemIndex],[activeItemIndex,items])
 
   const keyboardSensor = useSensor(KeyboardSensor, {
     coordinateGetter: sortableKeyboardCoordinates,
