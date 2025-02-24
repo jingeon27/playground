@@ -31,6 +31,7 @@ import React, {
   useState,
 } from "react";
 import { createPortal } from "react-dom";
+import { compareId } from "../util/compareId";
 
 interface Context {
   attributes: Record<string, any>;
@@ -146,7 +147,7 @@ export function DndDraggableList<T extends BaseItem>({
   const [active, setActive] = useState<Active | null>(null);
 
   const activeItemIndex = useMemo(
-    () => items?.findIndex(({ id }) => id === active?.id),
+    () => items?.findIndex(compareId(active?.id)),
     [active, items],
   );
 
@@ -170,8 +171,8 @@ export function DndDraggableList<T extends BaseItem>({
       }}
       onDragEnd={({ active, over }) => {
         if (over && active.id !== over?.id) {
-          const activeIndex = items.findIndex(({ id }) => id === active.id);
-          const overIndex = items.findIndex(({ id }) => id === over.id);
+          const activeIndex = items.findIndex(compareId(active.id));
+          const overIndex = items.findIndex(compareId(over.id));
           setItems(
             arrayMove(items, activeIndex, overIndex),
             items[activeIndex],
