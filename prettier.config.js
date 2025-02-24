@@ -1,6 +1,6 @@
 module.exports = {
   endOfLine: "auto",
-  plugins: [require.resolve("@trivago/prettier-plugin-sort-imports")],
+  plugins: ["@trivago/prettier-plugin-sort-imports"],
   importOrder: [
     "use client",
     "reflect-metadata",
