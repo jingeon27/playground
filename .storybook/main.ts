@@ -1,5 +1,4 @@
 import type { StorybookConfig } from "@storybook/nextjs";
-
 import { dirname, join } from "path";
 
 /**
@@ -22,8 +21,8 @@ const config: StorybookConfig = {
     name: getAbsolutePath("@storybook/nextjs"),
     options: {},
   },
-    core: {
-    builder: 'webpack5',
+  core: {
+    builder: "webpack5",
   },
   staticDirs: ["../public"],
 };

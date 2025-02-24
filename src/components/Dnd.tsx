@@ -1,15 +1,35 @@
-import { Active, DndContext, DragOverlay, DraggableSyntheticListeners, DropAnimation, KeyboardSensor, PointerSensor, defaultDropAnimationSideEffects, useSensor, useSensors } from "@dnd-kit/core";
 import {
-    SortableContext,
-    UseSortableArguments,
-    arrayMove,
-    rectSortingStrategy,
-    sortableKeyboardCoordinates,
-    useSortable
+  Active,
+  DndContext,
+  DragOverlay,
+  DraggableSyntheticListeners,
+  DropAnimation,
+  KeyboardSensor,
+  PointerSensor,
+  defaultDropAnimationSideEffects,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
+import {
+  SortableContext,
+  UseSortableArguments,
+  arrayMove,
+  rectSortingStrategy,
+  sortableKeyboardCoordinates,
+  useSortable,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { Slot } from "@radix-ui/react-slot";
-import React, { CSSProperties, PropsWithChildren, ReactNode, createContext, useContext, useId, useMemo, useState } from "react";
+import React, {
+  CSSProperties,
+  PropsWithChildren,
+  ReactNode,
+  createContext,
+  useContext,
+  useId,
+  useMemo,
+  useState,
+} from "react";
 import { createPortal } from "react-dom";
 
 interface Context {
@@ -35,19 +55,28 @@ interface SlotProps extends UseSortableArguments {
   handle?: boolean;
   asChild?: boolean;
   notOverlay?: boolean;
-  dragoverStyle?: CSSProperties; 
+  dragoverStyle?: CSSProperties;
 }
 
-
-export function  DndDragSlot (props: SlotProps) {
-  const { children, notOverlay, handle, asChild, dragoverStyle, ...restProps } = props;
-  const { setNodeRef, transition, setActivatorNodeRef, attributes, listeners, isDragging, transform } =
-    useSortable(restProps);
+export function DndDragSlot(props: SlotProps) {
+  const { children, notOverlay, handle, asChild, dragoverStyle, ...restProps } =
+    props;
+  const {
+    setNodeRef,
+    transition,
+    setActivatorNodeRef,
+    attributes,
+    listeners,
+    isDragging,
+    transform,
+  } = useSortable(restProps);
 
   const Comp = asChild ? Slot : "div";
 
   return (
-    <SortableItemContext.Provider value={{ attributes, listeners, ref: setActivatorNodeRef }}>
+    <SortableItemContext.Provider
+      value={{ attributes, listeners, ref: setActivatorNodeRef }}
+    >
       <Comp
         ref={setNodeRef}
         style={{
@@ -66,7 +95,7 @@ export function  DndDragSlot (props: SlotProps) {
       </Comp>
     </SortableItemContext.Provider>
   );
-};
+}
 
 const dropAnimationConfig: DropAnimation = {
   sideEffects: defaultDropAnimationSideEffects({
@@ -78,7 +107,7 @@ const dropAnimationConfig: DropAnimation = {
   }),
 };
 
-export const DndSortableOverlay = ({ children }: PropsWithChildren) => {
+export function DndSortableOverlay  ({ children }: PropsWithChildren) {
   return createPortal(
     <DragOverlay
       dropAnimation={dropAnimationConfig}
@@ -90,15 +119,19 @@ export const DndSortableOverlay = ({ children }: PropsWithChildren) => {
   );
 };
 
-
 type BaseItem = { id: string | number };
 
-interface DndDraggableListProps<T extends BaseItem>{
+interface DndDraggableListProps<T extends BaseItem> {
   items: T[];
-  setItems: (items: T[], activeItem?: T, overIndex?: number, activeIndex?: number) => void;
+  setItems: (
+    items: T[],
+    activeItem?: T,
+    overIndex?: number,
+    activeIndex?: number,
+  ) => void;
   renderItem: (item: T, index: number) => ReactNode;
   handle?: boolean;
-  children?:ReactNode;
+  children?: ReactNode;
   className?: string;
 }
 
@@ -109,12 +142,20 @@ export function DndDraggableList<T extends BaseItem>({
   handle = true,
   children,
   className,
-}:DndDraggableListProps<T>) {
+}: DndDraggableListProps<T>) {
   const [active, setActive] = useState<Active | null>(null);
-  const activeItem = useMemo(() => items?.find((item) => item.id === active?.id), [active, items]);
-  const activeItemIndex = useMemo(() => items?.findIndex(({ id }) => id === active?.id), [active, items]);
+  const activeItem = useMemo(
+    () => items?.find((item) => item.id === active?.id),
+    [active, items],
+  );
+  const activeItemIndex = useMemo(
+    () => items?.findIndex(({ id }) => id === active?.id),
+    [active, items],
+  );
 
-  const keyboardSensor = useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates });
+  const keyboardSensor = useSensor(KeyboardSensor, {
+    coordinateGetter: sortableKeyboardCoordinates,
+  });
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 3 } }),
     keyboardSensor,
@@ -128,22 +169,25 @@ export function DndDraggableList<T extends BaseItem>({
       onDragStart={({ active }) => {
         setActive(active);
       }}
-          onDragEnd={({ active, over }) => {
-                  if (over && active.id !== over?.id) {
+      onDragEnd={({ active, over }) => {
+        if (over && active.id !== over?.id) {
           const activeIndex = items.findIndex(({ id }) => id === active.id);
           const overIndex = items.findIndex(({ id }) => id === over.id);
-          setItems(arrayMove(items, activeIndex, overIndex), items[activeIndex], overIndex, activeIndex);
+          setItems(
+            arrayMove(items, activeIndex, overIndex),
+            items[activeIndex],
+            overIndex,
+            activeIndex,
+          );
         }
         setActive(null);
       }}
       onDragCancel={() => {
-      setActive(null);
+        setActive(null);
       }}
     >
       <SortableContext items={items} strategy={rectSortingStrategy}>
-        <div
-          className={className}
-        >
+        <div className={className}>
           {items.map((item, index) => {
             const renderItemNode = renderItem(item, index);
 
@@ -157,8 +201,12 @@ export function DndDraggableList<T extends BaseItem>({
           })}
           {children}
         </div>
-          </SortableContext>
-                {activeItem && <DndSortableOverlay>{renderItem(activeItem, activeItemIndex)}</DndSortableOverlay>}
+      </SortableContext>
+      {activeItem && (
+        <DndSortableOverlay>
+          {renderItem(activeItem, activeItemIndex)}
+        </DndSortableOverlay>
+      )}
     </DndContext>
   );
-};
+}
