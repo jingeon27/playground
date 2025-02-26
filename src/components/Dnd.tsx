@@ -1,3 +1,4 @@
+import { compareId } from "../util/compareId";
 import {
   Active,
   DndContext,
@@ -31,7 +32,6 @@ import React, {
   useState,
 } from "react";
 import { createPortal } from "react-dom";
-import { compareId } from "../util/compareId";
 
 interface Context {
   attributes: Record<string, any>;
@@ -46,10 +46,10 @@ const SortableItemContext = createContext<Context>({
   ref() {},
 });
 
-export function DndDragSlotItem (props: PropsWithChildren) {
+export function DndDragSlotItem(props: PropsWithChildren) {
   const { attributes, listeners, ref } = useContext(SortableItemContext);
   return <Slot {...props} ref={ref} {...attributes} {...listeners} />;
-};
+}
 
 interface SlotProps extends UseSortableArguments {
   children?: React.ReactNode;
@@ -59,9 +59,14 @@ interface SlotProps extends UseSortableArguments {
   dragoverStyle?: CSSProperties;
 }
 
-export function DndDragSlot(props: SlotProps) {
-  const { children, notOverlay, handle, asChild, dragoverStyle, ...restProps } =
-    props;
+export function DndDragSlot({
+  children,
+  notOverlay,
+  handle,
+  asChild,
+  dragoverStyle,
+  ...restProps
+}: SlotProps) {
   const {
     setNodeRef,
     transition,
@@ -85,7 +90,7 @@ export function DndDragSlot(props: SlotProps) {
           opacity: !notOverlay && isDragging ? 0.6 : undefined,
           transform: CSS.Translate.toString(transform),
           transition,
-          zIndex: notOverlay &&isDragging ? 100 : undefined,
+          zIndex: notOverlay && isDragging ? 100 : undefined,
           cursor: handle ? undefined : "grab",
           ...(isDragging && dragoverStyle ? dragoverStyle : {}),
         }}
@@ -108,7 +113,7 @@ const dropAnimationConfig: DropAnimation = {
   }),
 };
 
-export function DndSortableOverlay  ({ children }: PropsWithChildren) {
+export function DndSortableOverlay({ children }: PropsWithChildren) {
   return createPortal(
     <DragOverlay
       dropAnimation={dropAnimationConfig}
@@ -118,7 +123,7 @@ export function DndSortableOverlay  ({ children }: PropsWithChildren) {
     </DragOverlay>,
     document.body,
   );
-};
+}
 
 type BaseItem = { id: string | number };
 
@@ -151,7 +156,10 @@ export function DndDraggableList<T extends BaseItem>({
     [active, items],
   );
 
-  const activeItem = useMemo(()=>items?.[activeItemIndex],[activeItemIndex,items])
+  const activeItem = useMemo(
+    () => items?.[activeItemIndex],
+    [activeItemIndex, items],
+  );
 
   const keyboardSensor = useSensor(KeyboardSensor, {
     coordinateGetter: sortableKeyboardCoordinates,

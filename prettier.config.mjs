@@ -1,13 +1,9 @@
-module.exports = {
+import sortImports from "@trivago/prettier-plugin-sort-imports";
+
+export default {
   endOfLine: "auto",
-  plugins: ["@trivago/prettier-plugin-sort-imports"],
-  importOrder: [
-    "use client",
-    "reflect-metadata",
-    "<THIRD_PARTY_MODULES>",
-    "^@(.*)$",
-    "^[./]",
-  ],
+  plugins: [sortImports],
+  importOrder: ["use client", "reflect-metadata", "<THIRD_PARTY_MODULES>", "^@(.*)$", "^[./]"],
   importOrderParserPlugins: ["typescript", "jsx", "decorators-legacy"],
   printWidth: 110,
   importOrderCaseInsensitive: false,
