@@ -19,7 +19,7 @@ export const useSortableTable = <T extends Array<any>>({
     (curData: T = replicaData) =>
       ascFn
         ? {
-            ASC: curData.sort((a, b) => ascFn(a, b)),
+            ASC: curData.sort(ascFn),
             DESC: curData.sort((a, b) => ascFn(b, a)),
             CLEAR: replicaData,
           }[state]
