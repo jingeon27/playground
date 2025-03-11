@@ -43,6 +43,7 @@ export function useTable<T extends Array<any>>({
   columns,
   sortableItem,
 }: UseTableOption<T>) {
+  // 컴포넌트 내부에서 제어하면 unControlledComponent이기에 외부에서 control 되지 않는다는 의미로 unControlled로 명명
   const unControlledSortItem = useSortableTable({ data });
 
   const { sortData, handleSortData, sortingItem, sortingItemChange } =
