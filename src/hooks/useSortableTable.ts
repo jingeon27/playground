@@ -2,6 +2,7 @@ import { ElementOf } from "../util/elementOf";
 import { SortingStateType, SortingType } from "./useTable";
 import { useEffect, useState } from "react";
 
+// data를 오름차순 내림차순으로 정렬할 수 있게끔 하는 hook
 export const useSortableTable = <T extends Array<any>>({
   data,
   initialSortingItem = null,
