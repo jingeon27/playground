@@ -1,4 +1,4 @@
-import { useSortableTable } from "@/src/hooks/useSortableTable";
+import { useSortableArrayObject } from "@/src/hooks/useSortableArrayObject";
 import { SortingType } from "@/src/hooks/useTable";
 import { renderHook } from "@testing-library/react";
 
@@ -8,7 +8,7 @@ type User = {
   age: number;
 };
 
-describe("`useSortableTable`", () => {
+describe("`useSortableArrayObject`", () => {
   const mockUsers: User[] = [
     { id: 1, name: "Alice", age: 25 },
     { id: 2, name: "Bob", age: 30 },
@@ -29,8 +29,12 @@ describe("`useSortableTable`", () => {
     state: "ASC",
   };
 
-  renderHook(() =>
-    useSortableTable({
+  const {
+    result: {
+      current: { handleSortData, sortData, sortingItemChange, sortingItem },
+    },
+  } = renderHook(() =>
+    useSortableArrayObject({
       data: mockUsers,
     }),
   );
