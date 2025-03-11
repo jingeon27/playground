@@ -1,5 +1,5 @@
 import { ElementOf } from "../util/elementOf";
-import { useSortableTable } from "./useSortableTable";
+import { useSortableArrayObject } from "./useSortableArrayObject";
 import DescIcon from "@/public/assets/icon/icon-state_down.svg";
 import ClearIcon from "@/public/assets/icon/icon-state_none.svg";
 import AscIcon from "@/public/assets/icon/icon-state_up.svg";
@@ -35,7 +35,7 @@ export interface ColumnType<T> {
 interface UseTableOption<T extends Array<any>> {
   data: T;
   columns: ColumnType<ElementOf<T>>[];
-  sortableItem?: Omit<ReturnType<typeof useSortableTable<T>>, "sortData">;
+  sortableItem?: Omit<ReturnType<typeof useSortableArrayObject<T>>, "sortData">;
 }
 
 export function useTable<T extends Array<any>>({
@@ -44,7 +44,7 @@ export function useTable<T extends Array<any>>({
   sortableItem,
 }: UseTableOption<T>) {
   // 컴포넌트 내부에서 제어하면 unControlledComponent이기에 외부에서 control 되지 않는다는 의미로 unControlled로 명명
-  const unControlledSortItem = useSortableTable({ data });
+  const unControlledSortItem = useSortableArrayObject({ data });
 
   const { sortData, handleSortData, sortingItem, sortingItemChange } =
     sortableItem ? { sortData: data, ...sortableItem } : unControlledSortItem;
