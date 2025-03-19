@@ -27,15 +27,7 @@ export const useSortableArrayObject = <T extends Array<any>>({
         : curData;
 
   const handleSortData = (...args: Parameters<typeof dataSortToState>) => {
-    console.log(
-      args,
-      dataSortToState(...args)(sortData),
-      sortingItem?.key,
-      sortingItem?.state,
-      sortData.sort(sortingItem?.ascFn),
-    );
     setSortingItem((rest) => (rest ? { ...rest, state: args[0] } : rest));
-    console.log(sortingItem);
     setSortData(dataSortToState(...args));
   };
 
