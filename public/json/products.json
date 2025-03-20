@@ -1,0 +1,44 @@
+[
+    {
+        "id": 1,
+        "name": "블랙 티셔츠",
+        "category": "의류",
+        "price": 29000,
+        "image": "https://picsum.photos/200/300?random=1"
+    },
+    {
+        "id": 2,
+        "name": "화이트 티셔츠",
+        "category": "의류",
+        "price": 31000,
+        "image": "https://picsum.photos/200/300?random=2"
+    },
+    {
+        "id": 3,
+        "name": "포스터 (G-DRAGON)",
+        "category": "포스터",
+        "price": 15000,
+        "image": "https://picsum.photos/200/300?random=3"
+    },
+    {
+        "id": 4,
+        "name": "ATEEZ 앨범",
+        "category": "앨범",
+        "price": 45000,
+        "image": "https://picsum.photos/200/300?random=4"
+    },
+    {
+        "id": 5,
+        "name": "손흥민 싸인볼",
+        "category": "굿즈",
+        "price": 120000,
+        "image": "https://picsum.photos/200/300?random=5"
+    },
+    {
+        "id": 6,
+        "name": "비스테이지 후드티",
+        "category": "의류",
+        "price": 59000,
+        "image": "https://picsum.photos/200/300?random=6"
+    }
+]
