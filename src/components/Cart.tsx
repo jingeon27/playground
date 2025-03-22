@@ -1,6 +1,7 @@
 import {
   applyDiscounts,
   buyOneGetOneFree,
+  Discount,
   fixedDiscount,
   percentageDiscount,
 } from "../util/discount";
@@ -22,14 +23,14 @@ const discountOptions = [
   { label: "10% 할인", value: percentageDiscount(10) },
   { label: "50,000원 할인", value: fixedDiscount(50000) },
   { label: "1+1 할인", value: buyOneGetOneFree(2) },
-];
+] as const;
 
 export default function Cart() {
   const [selectedDiscounts, setSelectedDiscounts] = useState<{
-    [key: number]: any[];
+    [key: number]: Discount[];
   }>({});
 
-  const toggleDiscount = (productId: number, discount: any) => {
+  const toggleDiscount = (productId: number, discount: Discount) => {
     setSelectedDiscounts((prev) => {
       const discounts = prev[productId] || [];
       const newDiscounts = discounts.includes(discount)
