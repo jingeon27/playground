@@ -1,6 +1,12 @@
 import { ElementOf } from "../util/elementOf";
-import { SortingStateType, SortingType } from "./useTable";
 import { useEffect, useState } from "react";
+
+export type SortingStateType = "CLEAR" | "DESC" | "ASC";
+export interface SortingType<T> {
+  key: string;
+  state: SortingStateType;
+  ascFn: (a: T, b: T) => number;
+}
 
 // ArrayObject를 오름차순 내림차순으로 정렬할 수 있게끔 하는 hook
 export const useSortableArrayObject = <T extends Array<any>>({
