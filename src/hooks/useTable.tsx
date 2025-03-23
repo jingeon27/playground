@@ -1,12 +1,14 @@
 import { ElementOf } from "../util/elementOf";
-import { useSortableArrayObject } from "./useSortableArrayObject";
+import {
+  SortingStateType,
+  SortingType,
+  useSortableArrayObject,
+} from "./useSortableArrayObject";
 import DescIcon from "@/public/assets/icon/icon-state_down.svg";
 import ClearIcon from "@/public/assets/icon/icon-state_none.svg";
 import AscIcon from "@/public/assets/icon/icon-state_up.svg";
 import clsx from "clsx";
 import { ReactNode } from "react";
-
-export type SortingStateType = "CLEAR" | "DESC" | "ASC";
 
 const IconMap: Record<SortingStateType, ReactNode> = {
   ASC: <AscIcon />,
@@ -20,11 +22,6 @@ const nextActionMap: Record<SortingStateType, SortingStateType> = {
   DESC: "ASC",
 };
 
-export interface SortingType<T> {
-  key: string;
-  state: SortingStateType;
-  ascFn: (a: T, b: T) => number;
-}
 export interface ColumnType<T> {
   header?: string;
   sorting?: Omit<SortingType<T>, "state">;

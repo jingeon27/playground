@@ -1,5 +1,7 @@
-import { useSortableArrayObject } from "@/src/hooks/useSortableArrayObject";
-import { SortingType } from "@/src/hooks/useTable";
+import {
+  SortingType,
+  useSortableArrayObject,
+} from "@/src/hooks/useSortableArrayObject";
 import { act, renderHook } from "@testing-library/react";
 
 type User = {
