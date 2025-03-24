@@ -2,6 +2,7 @@ import { compareId } from "../util/compareId";
 import {
   Active,
   DndContext,
+  DragEndEvent,
   DragOverlay,
   DraggableSyntheticListeners,
   DropAnimation,
@@ -253,12 +254,11 @@ export function DndGrid() {
     useSensor(KeyboardSensor),
   );
 
-  const onDragEnd = (event: any) => {
-    const { active, over } = event;
-    if (active.id !== over.id) {
+  const onDragEnd = ({ active, over }: DragEndEvent) => {
+    if (over !== null && active.id !== over.id) {
       setItems((prev) => {
-        const oldIndex = prev.indexOf(active.id);
-        const newIndex = prev.indexOf(over.id);
+        const oldIndex = prev.indexOf(active.id as string);
+        const newIndex = prev.indexOf(over.id as string);
         return arrayMove(prev, oldIndex, newIndex);
       });
     }
