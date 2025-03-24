@@ -7,6 +7,7 @@ import {
   DropAnimation,
   KeyboardSensor,
   PointerSensor,
+  closestCenter,
   defaultDropAnimationSideEffects,
   useSensor,
   useSensors,
@@ -18,6 +19,7 @@ import {
   rectSortingStrategy,
   sortableKeyboardCoordinates,
   useSortable,
+  verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { Slot } from "@radix-ui/react-slot";
@@ -215,6 +217,66 @@ export function DndDraggableList<T extends BaseItem>({
           {renderItem(activeItem, activeItemIndex)}
         </DndSortableOverlay>
       )}
+    </DndContext>
+  );
+}
+
+export function GridItem({ id }: { id: string }) {
+  const { attributes, listeners, setNodeRef, transform, transition } =
+    useSortable({ id });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+  };
+
+  return (
+    <div
+      ref={setNodeRef}
+      style={style}
+      {...attributes}
+      {...listeners}
+      className="w-24 h-24 flex items-center justify-center border rounded-lg bg-blue-500 text-white cursor-grab active:cursor-grabbing"
+    >
+      {id}
+    </div>
+  );
+}
+
+export function DndGrid() {
+  const [items, setItems] = useState(
+    Array.from({ length: 9 }, (_, i) => `Item ${i + 1}`),
+  );
+
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor),
+  );
+
+  const onDragEnd = (event: any) => {
+    const { active, over } = event;
+    if (active.id !== over.id) {
+      setItems((prev) => {
+        const oldIndex = prev.indexOf(active.id);
+        const newIndex = prev.indexOf(over.id);
+        return arrayMove(prev, oldIndex, newIndex);
+      });
+    }
+  };
+
+  return (
+    <DndContext
+      sensors={sensors}
+      collisionDetection={closestCenter}
+      onDragEnd={onDragEnd}
+    >
+      <SortableContext items={items} strategy={verticalListSortingStrategy}>
+        <div className="grid grid-cols-3 gap-4 p-4">
+          {items.map((id) => (
+            <GridItem key={id} id={id} />
+          ))}
+        </div>
+      </SortableContext>
     </DndContext>
   );
 }
