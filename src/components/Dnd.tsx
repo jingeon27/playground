@@ -1,4 +1,5 @@
 import { compareId } from "../util/compareId";
+import { isStringId } from "../util/isStringId";
 import {
   Active,
   DndContext,
@@ -254,14 +255,16 @@ export function DndGrid() {
     useSensor(KeyboardSensor),
   );
 
-  const onDragEnd = ({ active, over }: DragEndEvent) => {
-    if (over !== null && active.id !== over.id) {
-      setItems((prev) => {
-        const oldIndex = prev.indexOf(active.id as string);
-        const newIndex = prev.indexOf(over.id as string);
-        return arrayMove(prev, oldIndex, newIndex);
-      });
-    }
+  const onDragEnd = (event: DragEndEvent) => {
+    const { over, active } = event;
+    if (over === null) return;
+    if (!(isStringId(over) && isStringId(active))) return;
+    if (active.id === over.id) return;
+    setItems((prev) => {
+      const oldIndex = prev.indexOf(active.id);
+      const newIndex = prev.indexOf(over.id);
+      return arrayMove(prev, oldIndex, newIndex);
+    });
   };
 
   return (
