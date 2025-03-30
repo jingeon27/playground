@@ -3671,6 +3671,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/lodash@npm:^4":
+  version: 4.17.16
+  resolution: "@types/lodash@npm:4.17.16"
+  checksum: 10c0/cf017901b8ab1d7aabc86d5189d9288f4f99f19a75caf020c0e2c77b8d4cead4db0d0b842d009b029339f92399f49f34377dd7c2721053388f251778b4c23534
+  languageName: node
+  linkType: hard
+
 "@types/mdx@npm:^2.0.0":
   version: 2.0.13
   resolution: "@types/mdx@npm:2.0.13"
@@ -7481,6 +7488,7 @@ __metadata:
     "@types/chart.js": "npm:^2.9.41"
     "@types/identity-obj-proxy": "npm:^3"
     "@types/jest": "npm:^29.5.14"
+    "@types/lodash": "npm:^4"
     "@types/node": "npm:^20"
     "@types/react": "npm:^19"
     "@types/react-dom": "npm:^19"
@@ -7494,6 +7502,7 @@ __metadata:
     identity-obj-proxy: "npm:^3.0.0"
     jest: "npm:^29.7.0"
     jest-environment-jsdom: "npm:^29.7.0"
+    lodash: "npm:^4.17.21"
     next: "npm:15.1.6"
     postcss: "npm:^8"
     prettier: "npm:^3.5.2"
