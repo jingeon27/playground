@@ -1,5 +1,23 @@
 import { useAudioRecord } from "../hooks/useAudioRecord";
 import clsx from "clsx";
+import { isUndefined } from "lodash";
+import { ComponentProps } from "react";
+
+function Audio({ src, ...rest }: ComponentProps<"audio">) {
+  if (isUndefined(src)) return null;
+  return (
+    <div className="flex flex-col items-center">
+      <audio controls className="mt-2" {...rest} />
+      <a
+        href={src}
+        download="recording.wav"
+        className="mt-2 text-blue-500 underline"
+      >
+        Download Recording
+      </a>
+    </div>
+  );
+}
 
 export function VoiceRecorder() {
   const { isRecording, stopRecording, startRecording, audioUrl } =
@@ -16,18 +34,7 @@ export function VoiceRecorder() {
       >
         {isRecording ? "Stop Recording" : "Start Recording"}
       </button>
-      {audioUrl ? (
-        <div className="flex flex-col items-center">
-          <audio controls src={audioUrl} className="mt-2" />
-          <a
-            href={audioUrl}
-            download="recording.wav"
-            className="mt-2 text-blue-500 underline"
-          >
-            Download Recording
-          </a>
-        </div>
-      ) : null}
+      <Audio src={audioUrl ?? undefined} />
     </div>
   );
 }
