@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 
 export function useAudioRecord() {
   const [isRecording, setIsRecording] = useState(false);
