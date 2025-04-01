@@ -11,18 +11,18 @@ export function useAudioRecord() {
     const mediaRecorder = new MediaRecorder(stream);
     mediaRecorderRef.current = mediaRecorder;
 
-    mediaRecorder.ondataavailable = (event) => {
-      audioChunksRef.current.push(event.data);
+    mediaRecorderRef.current.ondataavailable = ({ data }) => {
+      audioChunksRef.current.push(data);
     };
 
-    mediaRecorder.onstop = () => {
+    mediaRecorderRef.current.onstop = () => {
       const audioBlob = new Blob(audioChunksRef.current, { type: "audio/wav" });
       const url = URL.createObjectURL(audioBlob);
       setAudioUrl(url);
       audioChunksRef.current = [];
     };
 
-    mediaRecorder.start();
+    mediaRecorderRef.current.start();
     setIsRecording(true);
   };
 
