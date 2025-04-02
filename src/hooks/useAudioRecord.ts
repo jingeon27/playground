@@ -1,3 +1,4 @@
+import { isNull } from "lodash";
 import { useRef, useState } from "react";
 
 export function useAudioRecord() {
@@ -8,8 +9,10 @@ export function useAudioRecord() {
 
   const startRecording = async () => {
     const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-    const mediaRecorder = new MediaRecorder(stream);
-    mediaRecorderRef.current = mediaRecorder;
+    if (isNull(mediaRecorderRef.current)) {
+      const mediaRecorder = new MediaRecorder(stream);
+      mediaRecorderRef.current = mediaRecorder;
+    }
 
     mediaRecorderRef.current.ondataavailable = ({ data }) => {
       audioChunksRef.current.push(data);
@@ -30,10 +33,16 @@ export function useAudioRecord() {
     mediaRecorderRef.current?.stop();
     setIsRecording(false);
   };
+
+  const resetRecoding = () => {
+    mediaRecorderRef.current = null;
+  };
+
   return {
     isRecording,
     stopRecording,
     startRecording,
+    resetRecoding,
     audioChunksRef,
     mediaRecorderRef,
     audioUrl,
